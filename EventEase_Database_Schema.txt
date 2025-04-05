@@ -1,0 +1,80 @@
+USE MASTER
+IF EXISTS (SELECT * FROM sys.databases WHERE name = 'EventEasee')
+DROP DATABASE EventEasee
+CREATE DATABASE EventEasee
+
+USE EventEasee;
+
+
+GO
+
+-- Drop tables if they exist
+IF OBJECT_ID('Booking', 'U') IS NOT NULL DROP TABLE Booking;
+IF OBJECT_ID('Event', 'U') IS NOT NULL DROP TABLE Event;
+IF OBJECT_ID('Venue', 'U') IS NOT NULL DROP TABLE Venue;
+GO
+
+CREATE TABLE Venue (
+    VenueId INT IDENTITY(1,1) PRIMARY KEY,  -- Auto-incrementing primary key
+    VenueName NVARCHAR(500) NOT NULL,       -- Venue name (Required)
+    Location NVARCHAR(500) NOT NULL,        -- Venue location (Required)
+    Capacity INT NOT NULL,                  -- Maximum capacity
+    ImageUrl NVARCHAR(500)                   -- Image URL for venue
+);
+GO
+
+CREATE TABLE Event (
+    EventId INT IDENTITY(1,1) PRIMARY KEY,  -- Auto-incrementing primary key
+    EventName NVARCHAR(500) NOT NULL,       -- Event name (Required)
+    EventDate DATETIME NOT NULL,            -- Date and time of the event
+    Description NVARCHAR(500),              -- Short description
+    VenueId INT NOT NULL,                   -- Foreign key to Venue table
+    FOREIGN KEY (VenueId) REFERENCES Venue(VenueId) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE Booking (
+    BookingId INT IDENTITY(1,1) PRIMARY KEY,  
+    EventId INT NOT NULL,                     
+    VenueId INT NOT NULL,                     
+    BookingDate DATETIME NOT NULL,            
+
+    -- Keep ON DELETE CASCADE only for EventId
+    FOREIGN KEY (EventId) REFERENCES Event(EventId) ON DELETE CASCADE,
+
+    -- Remove ON DELETE CASCADE for VenueId
+    FOREIGN KEY (VenueId) REFERENCES Venue(VenueId) ON DELETE NO ACTION
+);
+GO
+
+INSERT INTO Venue (VenueName, Location, Capacity, ImageUrl) 
+VALUES ('Zone6Vanue', ' 28, Blackchain Shopping Centre, Chris Hani Rd & Patrick Street, Diepkloof Zone 6, Soweto, 1862, South Africa', '3200', 'https://x.com/Zone6Venue/status/1470694090950025223/photo/1'),
+	   ('Pablo Escobar', 'Hatfield Plaza Shopping Centre', '500', 'https://lh3.googleusercontent.com/p/AF1QipPTFG8QFTXrW_KNMyW1d2qZXkWdtbG0iFCoVsRC=s680-w680-h510');
+GO
+
+
+INSERT INTO Event (EventName, EventDate, Description, VenueId) 
+VALUES ('ProKidTributeConcert', '2025-08-26 01:00:00', 'We will be fundraising for a worthy cause. Let’s make this a special one fam and support Soweto’s very own #1 #ProKid ', 1),
+       ('DON Pablo Kidnaps', '2025-04-01 18:00:00', '@drshinealot_sa Feat. @blue_aiva & @___kim.k___ Hosted By @kabelo_.m ', 2);
+GO
+
+INSERT INTO Booking (EventId, VenueId, BookingDate) 
+VALUES (1, 1, '2025-06-01 12:00:00'),
+       (2, 2, '2025-03-30 14:00:00');
+GO
+
+SELECT * FROM Venue;
+
+SELECT e.EventId, e.EventName, e.EventDate, v.VenueName 
+FROM Event e 
+JOIN Venue v ON e.VenueId = v.VenueId;
+
+SELECT b.BookingId, e.EventName, v.VenueName, b.BookingDate
+FROM Booking b
+JOIN Event e ON b.EventId = e.EventId
+JOIN Venue v ON b.VenueId = v.VenueId;
+
+DROP TABLE IF EXISTS Booking;
+GO
+
+

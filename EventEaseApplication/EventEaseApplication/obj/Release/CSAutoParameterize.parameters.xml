@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="EventEaseContext-Web.config Connection String" description="EventEaseContext Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:musaserver.database.windows.net,1433;Initial Catalog=EventEaseDB;Persist Security Info=False;User ID=Musa;Password=@Janda123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\lab_services_student\\Documents\\ST10456109_CLDV6211_Group2_Part1\\EventEaseApplication\\EventEaseApplication\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='EventEaseContext']/@connectionString" />
+  </parameter>
+</parameters>
